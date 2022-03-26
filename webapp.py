@@ -3,14 +3,26 @@ from flask import Flask
 from flask import render_template
 from flask import send_file
 from flask import request
+from flask import redirect
+from flask import url_for
+import functools
 import base64
 import io
 
 app = Flask(__name__)
-
-ig = Instagram('<username>', '<password>')
+ig = Instagram()
 ig.verify_instance()
-ig.login()
+ig.load_session()
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(**kwargs):
+        if ig.is_auth() == False:
+            return redirect(url_for('login'))
+
+        return view(**kwargs)
+
+    return wrapped_view
 
 @app.context_processor
 def utility_processor():
@@ -37,12 +49,14 @@ def utility_processor():
 
     return dict(b64e=b64e,b64d=b64d,posts_for_render=posts_for_render)
 
-@app.route("/post/<string:code>")
+@app.route("/p/<string:code>")
+@login_required
 def view_post(code):
     ig.load_post(code)
     return render_template('post.html', post=ig.get_post())
 
 @app.route("/<string:username>")
+@login_required
 def view_profile(username):
     ig.load_profile(username)
     return render_template('profile.html', posts=ig.get_posts())
@@ -55,3 +69,32 @@ def view_image():
         mimetype='image/jpg'
     )
 
+@app.route("/login", methods=['GET', 'POST'])
+def login():
+    if request.method == 'GET':
+        return render_template('login.html')
+    if request.method == 'POST':
+        if 'username' in request.form and 'password' in request.form:
+            if ig.login(request.form['username'], request.form['password']):
+                return 'Login Successful'
+            else:
+                if ig.in_chekpoint_mode:
+                    return redirect(url_for('checkpoint'))
+                else:
+                    return 'Invalid Login'
+        else:
+            return 'Bad Request'
+
+@app.route("/checkpoint", methods=['GET'])
+def checkpoint():
+    return render_template('checkpoint.html')
+
+@app.route("/checkpoint/<int:mode>", methods=['GET', 'POST'])
+def checkpoint_validate(mode):
+    if request.method == 'GET':
+        ig.login_challenge_start(mode)
+        return render_template('checkpoint.html', mode=mode)
+    if request.method == 'POST' and 'code' in request.form and ig.in_chekpoint_mode: 
+        code = request.form['code']
+        ig.login_challenge_validate(code)
+        return 'Login Successful'

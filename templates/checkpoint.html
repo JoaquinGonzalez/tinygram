@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="checkpoint">
+    {% if mode is defined %}
+    <form action="/checkpoint/{{ mode }}" method="POST">
+        {% if mode == 0 %}
+        <h3>Insert the code from your SMS</h3>
+        <input type="number" name="code">
+        {% elif mode == 1 %}
+        <h3>Insert the code from your E-Mail</h3>
+        <input type="number" name="code">
+        {% endif %}
+    </form>
+    {% else %}
+    <div class="option">
+        <a href="/checkpoint/0">Receive the code as SMS</a>
+    </div>
+    <div class="option">
+        <a href="/checkpoint/1">Receive the code as E-Mail</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

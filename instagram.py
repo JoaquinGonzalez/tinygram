@@ -6,10 +6,10 @@ from constants import *
 
 class Instagram():
 
-    def __init__(self, account_user=None, account_pass=None):
-        self.account_user = account_user
-        self.account_pass = account_pass
+    def __init__(self):
         self.cookiejar = 'session'
+        self.checkpoint_url = None
+        self.in_chekpoint_mode = False
 
         self.id = 0
         self.profile = None
@@ -25,6 +25,9 @@ class Instagram():
         self.cookies = None
         self.auth = False
 
+    def is_auth(self):
+        return self.auth
+
     def verify_instance(self):
         self.session.headers.update({'Referer': BASE_URL,
                                      'user-agent': STORIES_UA})
@@ -34,11 +37,11 @@ class Instagram():
         self.session.headers.update({'X-CSRFToken': req.cookies['csrftoken']})
         self.session.headers.update({'user-agent': CHROME_WIN_UA})
 
-    def login(self):
+    def login(self, username, password):
         self.session.headers.update({'Referer': BASE_URL,
                                      'user-agent': STORIES_UA})
-        login_data = {'username': self.account_user,
-                      'password': self.account_pass}
+        login_data = {'username': username,
+                      'password': password}
         login = self.session.post(LOGIN_URL,
                                   data=login_data,
                                   allow_redirects=True)
@@ -54,6 +57,52 @@ class Instagram():
             self.id = text.get('userId')
             self.save_cookies()
             return True
+        else:
+            if 'checkpoint_url' in text:
+                self.checkpoint_url = text.get('checkpoint_url')
+                self.in_chekpoint_mode = True
+
+        return False
+
+    def login_challenge_start(self, mode):
+        self.session.headers.update({'Referer': BASE_URL})
+        req = self.session.get(BASE_URL[:-1] + self.checkpoint_url)
+        self.session.headers.update({
+            'X-CSRFToken': req.cookies['csrftoken'],
+            'X-Instagram-AJAX': '1'
+        })
+
+        self.session.headers.update({'Referer': BASE_URL[:-1] + self.checkpoint_url})
+        challenge_data = {'choice': mode}
+        challenge = self.session.post(
+            BASE_URL[:-1] + self.checkpoint_url,
+            data=challenge_data,
+            allow_redirects=True
+        )
+        self.session.headers.update({
+            'X-CSRFToken': challenge.cookies['csrftoken'],
+            'X-Instagram-AJAX': '1'
+        })
+
+    def login_challenge_validate(self, code):
+        code_data = {'security_code': code}
+        code = self.session.post(
+            BASE_URL[:-1] + self.checkpoint_url,
+            data=code_data,
+            allow_redirects=True
+        )
+        self.session.headers.update({'X-CSRFToken': code.cookies['csrftoken']})
+        self.cookies = code.cookies
+        code_text = json.loads(code.text)
+
+        if code_text.get('status') == 'ok':
+            self.auth = True
+            self.id = code_text.get('userId')
+            self.save_cookies()
+            return True
+
+        self.in_chekpoint_mode = False
+        self.checkpoint_url = None
 
         return False
 
@@ -61,6 +110,7 @@ class Instagram():
         if self.cookiejar and os.path.exists(self.cookiejar):
             with open(self.cookiejar, 'rb') as f:
                 self.session.cookies.update(pickle.load(f))
+                self.auth = True
             return True
         return False
 

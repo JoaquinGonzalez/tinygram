@@ -7,7 +7,7 @@
             {% for post in row %}
             <div class="flex post">
                 <a
-                    href="{{ 'https://localhost:5000/post/' + post.node.shortcode }}"
+                    href="{{ 'http://localhost:5000/p/' + post.node.shortcode }}"
                 >
                     <div class="overlay">
                         <div class="tile">{{ post.node.edge_liked_by.count }}</div>

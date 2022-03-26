@@ -68,3 +68,12 @@
     user-select: none;
     width: 100%;
 }
+
+.single-post {
+    margin: 0 auto 30px;
+    max-width: 695px;
+}
+
+.single-post .image img {
+    width: 100%;
+}
