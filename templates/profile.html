@@ -10,13 +10,17 @@
                     href="{{ 'http://localhost:5000/p/' + post.node.shortcode }}"
                 >
                     <div class="overlay">
-                        <div class="tile">{{ post.node.edge_liked_by.count }}</div>
+                        <div class="tile">
+                            {{ post.node.edge_media_preview_like.count }}
+                        </div>
                         <div class="tile">
                             {{ post.node.edge_media_to_comment.count }}
                         </div>
                     </div>
                     <div class="image">
-                        <img src="{{ 'http://localhost:5000/image?url=' + b64e(post.node.thumbnail_src) }}">
+                        <img
+                            src="http://localhost:5000/image?url={{ b64e(post.node.thumbnail_src) }}"
+                        >
                     </div>
                 </a>
             </div>
@@ -24,5 +28,16 @@
         </div>
         {% endfor %}
     </div>
+    {% if posts.page_info.has_next_page %}
+    <div class="pagination">
+        <div class="load">
+            <a
+                href="http://localhost:5000/{{ username }}?end_cursor={{ posts.page_info.end_cursor }}"
+            >
+                Load More
+            </a>
+        </div>
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

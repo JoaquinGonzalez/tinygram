@@ -59,7 +59,9 @@ def view_post(code):
 @login_required
 def view_profile(username):
     ig.load_profile(username)
-    return render_template('profile.html', posts=ig.get_posts())
+    if 'end_cursor' in request.args:
+        ig.more_posts(request.args['end_cursor'])
+    return render_template('profile.html', username=username, posts=ig.get_posts())
 
 @app.route("/image")
 def view_image():

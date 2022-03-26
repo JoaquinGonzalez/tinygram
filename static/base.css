@@ -26,6 +26,7 @@
 .main {
     margin: 0 auto 30px;
     max-width: 935px;
+    /* max-width: 40%; */
 }
 
 .posts-container {
@@ -71,9 +72,20 @@
 
 .single-post {
     margin: 0 auto 30px;
-    max-width: 695px;
 }
 
 .single-post .image img {
     width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    overflow: auto;
+    position: fixed;
+    right: 0;
+    top: 0;
+    -o-object-fit: contain;
+    object-fit: contain;
+    max-width: 935px;
 }

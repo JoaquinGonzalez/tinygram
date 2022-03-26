@@ -30,7 +30,6 @@ QUERY_LOCATION = BASE_URL + 'graphql/query/?query_hash=ac38b90f0f3981c42092016a3
 QUERY_LOCATION_VARS = '{{"id":"{0}","first":50,"after":"{1}"}}'
 
 #QUERY_MEDIA = BASE_URL + 'graphql/query/?query_hash=42323d64886122307be10013ad2dcc44&variables={0}'
-#QUERY_MEDIA_VARS = '{{"id":"{0}","first":50,"after":"{1}"}}'
 QUERY_MEDIA = BASE_URL + 'graphql/query/?query_hash=8c2a529969ee035a5063f2fc8602a0fd&variables={0}'
 QUERY_MEDIA_VARS = '{{"id":"{0}","first":50,"after":"{1}"}}'
 

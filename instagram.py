@@ -2,6 +2,7 @@ import requests
 import json
 import pickle
 import os
+import urllib.parse
 from constants import *
 
 class Instagram():
@@ -27,6 +28,9 @@ class Instagram():
 
     def is_auth(self):
         return self.auth
+
+    def get_id(self):
+        return self.id
 
     def verify_instance(self):
         self.session.headers.update({'Referer': BASE_URL,
@@ -130,10 +134,22 @@ class Instagram():
 
     def load_profile(self, username):
         self.profile = self._get(USER_URL.format(username))
+        self.id = self.profile['graphql']['user']['id']
         self.posts = self.profile['graphql']['user']['edge_owner_to_timeline_media']
 
     def load_post(self, shortcode):
         self.post = self._get(VIEW_MEDIA_URL.format(shortcode))
+
+    def more_posts(self, end_cursor):
+        resp = self._get(
+            QUERY_MEDIA.format(
+                urllib.parse.quote(
+                    QUERY_MEDIA_VARS.format(self.id, end_cursor)
+                )
+            )
+        )
+        self.posts['edges'] = self.posts['edges'] + resp['data']['user']['edge_owner_to_timeline_media']['edges']
+        self.posts['page_info'] = resp['data']['user']['edge_owner_to_timeline_media']['page_info']
     
     def get_profile_attr(self, key):
         return self.profile.get('graphql')['user'][key]
