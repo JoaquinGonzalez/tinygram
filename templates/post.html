@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="single-post">
+    <div class="image">
+        {% if post.carousel_media_count %}
+        <img
+            src="http://localhost:5000/image?url=
+            {{ b64e(post.carousel_media[0].image_versions2.candidates[0].url) }}"
+        >
+        {% else %}
+        <img
+            src="http://localhost:5000/image?url=
+            {{ b64e(post.image_versions2.candidates[0].url) }}"
+        >
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
