@@ -37,14 +37,20 @@ def utility_processor():
         return tb.decode('ascii')
 
     def posts_for_render(posts):
+        def fill(n, p):
+            for x in range(n):
+                p.append({"is_fill":True})
         c=len(posts)
         i=0
         o=[]
         if c <= 3:
+            fill(c - 3, posts)
             return [posts]
         while i < c:
             o.append(posts[i:i+3])
             i = i + 3
+        last=o[len(o)-1]
+        fill(3-len(last), last)
         return o
 
     return dict(b64e=b64e,b64d=b64d,posts_for_render=posts_for_render)

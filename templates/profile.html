@@ -5,6 +5,9 @@
         {% for row in posts_for_render(posts.edges) %}
         <div class="flex row">
             {% for post in row %}
+            {% if post.is_fill is defined %}
+            <div class="flex post"></div>
+            {% else %}
             <div class="flex post">
                 <a
                     href="{{ 'http://localhost:5000/p/' + post.node.shortcode }}"
@@ -24,6 +27,7 @@
                     </div>
                 </a>
             </div>
+            {% endif %}
             {% endfor %}
         </div>
         {% endfor %}
