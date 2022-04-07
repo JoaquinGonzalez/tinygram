@@ -2,64 +2,80 @@ function render_posts(posts)
 {
     const postsDiv = document.getElementById('posts');
     const last = postsDiv.children[postsDiv.childElementCount - 1];
-    const render = (rows) => {
-        for (let rowi in rows) {
-            const row = rows[rowi];
+    const tail = Object.values(last.children).slice(1, 3);
+    const fillc = (tail[0].childElementCount ^ 1) + (tail[1].childElementCount ^ 1);
+    const replacediv = tail.slice(tail.length - fillc, tail.length);
+    const filll = posts.slice(0, fillc);
+
+    const render = (rows, filll = []) => {
+        const createPost = (post) => {
+            const postDiv = document.createElement('div');
+
+            postDiv.classList.add('flex');
+            postDiv.classList.add('post');
+
+            if (!post.is_fill) {
+                postDiv.id = post.node.shortcode;
+
+                const aEle = document.createElement('a');
+                aEle.href = `http://localhost:5000/p/${post.node.shortcode}`;
+
+                const overlayDiv = document.createElement('div');
+                const tileOneDiv = document.createElement('div');
+                const tileTwoDiv = document.createElement('div');
+                
+                overlayDiv.classList.add('overlay');
+                tileOneDiv.innerText = post.node.edge_media_preview_like;
+                tileOneDiv.classList.add('tile');
+                tileTwoDiv.innerText = post.node.edge_media_to_comment;
+                tileTwoDiv.classList.add('tile');
+
+                overlayDiv.append(tileOneDiv);
+                overlayDiv.append(tileTwoDiv);
+
+                const imageDiv = document.createElement('div');
+                const imgEle = document.createElement('img');
+
+                imageDiv.classList.add('image');
+                imgEle.src = `http://localhost:5000/image?url=${btoa(post.node.thumbnail_src)}`;
+                imageDiv.append(imgEle);
+
+                aEle.append(overlayDiv);
+                aEle.append(imageDiv);
+                postDiv.append(aEle);
+            }
+
+            return postDiv;
+        };
+
+        const createRow = (row) => {
             const rowDiv = document.createElement('div');
 
             rowDiv.classList.add('flex');
             rowDiv.classList.add('row');
 
             for (let posti in row) {
-                const post = row[posti];
-                const postDiv = document.createElement('div');
-
-                postDiv.classList.add('flex');
-                postDiv.classList.add('post');
-
-                if (!post.is_fill) {
-                    postDiv.id = post.node.shortcode;
-
-                    const aEle = document.createElement('a');
-                    aEle.href = `http://localhost:5000/p/${post.node.shortcode}`;
-
-                    const overlayDiv = document.createElement('div');
-                    const tileOneDiv = document.createElement('div');
-                    const tileTwoDiv = document.createElement('div');
-                    
-                    overlayDiv.classList.add('overlay');
-                    tileOneDiv.innerText = post.node.edge_media_preview_like;
-                    tileOneDiv.classList.add('tile');
-                    tileTwoDiv.innerText = post.node.edge_media_to_comment;
-                    tileTwoDiv.classList.add('tile');
-
-                    overlayDiv.append(tileOneDiv);
-                    overlayDiv.append(tileTwoDiv);
-
-                    const imageDiv = document.createElement('div');
-                    const imgEle = document.createElement('img');
-
-                    imageDiv.classList.add('image');
-                    imgEle.src = `http://localhost:5000/image?url=${btoa(post.node.thumbnail_src)}`;
-                    imageDiv.append(imgEle);
-
-                    aEle.append(overlayDiv);
-                    aEle.append(imageDiv);
-                    postDiv.append(aEle);
-                }
-
-                rowDiv.append(postDiv);
+                rowDiv.append(createPost(row[posti]));
             }
 
-            postsDiv.append(rowDiv);
+            return rowDiv;
+        };
+
+        for (let fillli in filll)
+            last.replaceChild(createPost(filll[fillli]), replacediv[fillli]);
+
+        for (let rowi in rows) {
+            postsDiv.append(createRow(rows[rowi]));
         }
     };
+
     const fill = (n, p) => {
         for (let i = 0; i < n; i++)
             p.push({"is_fill": true})
 
         return p
     };
+
     const sortposts = (posts) => {
         const o = [];
         const c = posts.length;
@@ -81,7 +97,10 @@ function render_posts(posts)
         return o;
     };
 
-    render(sortposts(posts));
+    if (fillc > 0)
+        render(sortposts(posts.slice(fillc, posts.length)), filll);
+    else
+        render(sortposts(posts));
 }
 
 async function load_more_posts(e)
