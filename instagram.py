@@ -134,8 +134,9 @@ class Instagram():
 
     def load_profile(self, username):
         self.profile = self._get(USER_URL.format(username))
-        self.id = self.profile['graphql']['user']['id']
-        self.posts = self.profile['graphql']['user']['edge_owner_to_timeline_media']
+        if type(self.profile) == dict:
+            self.id = self.profile['graphql']['user']['id']
+            self.posts = self.profile['graphql']['user']['edge_owner_to_timeline_media']
 
     def load_post(self, shortcode):
         self.post = self._get(VIEW_MEDIA_URL.format(shortcode))
@@ -148,8 +149,13 @@ class Instagram():
                 )
             )
         )
-        self.posts['edges'] = self.posts['edges'] + resp['data']['user']['edge_owner_to_timeline_media']['edges']
-        self.posts['page_info'] = resp['data']['user']['edge_owner_to_timeline_media']['page_info']
+
+        data = resp['data']['user']['edge_owner_to_timeline_media']
+
+        self.posts['edges'] = self.posts['edges'] + data['edges']
+        self.posts['page_info'] = data['page_info']
+
+        return data
     
     def get_profile_attr(self, key):
         return self.profile.get('graphql')['user'][key]

@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="posts-container">
-    <div class="flex posts">
+    <div class="flex posts" id="posts">
         {% for row in posts_for_render(posts.edges) %}
         <div class="flex row">
             {% for post in row %}
             {% if post.is_fill is defined %}
             <div class="flex post"></div>
             {% else %}
-            <div class="flex post">
+            <div class="flex post" id="{{ post.node.shortcode }}">
                 <a
                     href="{{ 'http://localhost:5000/p/' + post.node.shortcode }}"
                 >
@@ -36,7 +36,10 @@
     <div class="pagination">
         <div class="load">
             <a
-                href="http://localhost:5000/{{ username }}?end_cursor={{ posts.page_info.end_cursor }}"
+                href="#{{ posts.edges[-1].node.shortcode }}"
+                username="{{ username }}"
+                end_cursor="{{ posts.page_info.end_cursor }}"
+                onclick="load_more_posts(this)"
             >
                 Load More
             </a>

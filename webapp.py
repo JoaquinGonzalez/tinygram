@@ -40,17 +40,22 @@ def utility_processor():
         def fill(n, p):
             for x in range(n):
                 p.append({"is_fill":True})
+
         c=len(posts)
         i=0
         o=[]
+
         if c <= 3:
             fill(3 - c, posts)
             return [posts]
+
         while i < c:
             o.append(posts[i:i+3])
             i = i + 3
-        last=o[len(o)-1]
+
+        last=o[-1]
         fill(3 - len(last), last)
+
         return o
 
     return dict(b64e=b64e,b64d=b64d,posts_for_render=posts_for_render)
@@ -68,6 +73,14 @@ def view_profile(username):
     if 'end_cursor' in request.args:
         ig.more_posts(request.args['end_cursor'])
     return render_template('profile.html', username=username, posts=ig.get_posts())
+
+@app.route("/api/<string:username>")
+@login_required
+def api_end_cursor(username):
+    if 'end_cursor' in request.args:
+        ig.load_profile(username)
+        return ig.more_posts(request.args['end_cursor'])
+    return "Bad request", 400
 
 @app.route("/image")
 def view_image():
