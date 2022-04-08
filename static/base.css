@@ -1,4 +1,9 @@
-.flex {
+html, body {
+    height: 100%;
+    font-family: "Open Sans", Arial, sans-serif;
+}
+
+main, div, section, article {
     -webkit-box-align: stretch;
     -webkit-align-items: stretch;
     -ms-flex-align: stretch;
@@ -26,10 +31,14 @@
 .main {
     margin: 0 auto 30px;
     max-width: 935px;
+    height: 100%;
     /* max-width: 40%; */
 }
 
 .posts-container {
+    /* flex-direction: column; */
+    /* padding-bottom: 7129.65px; */
+    /* padding-top: 0px; */
 }
 
 .posts {
@@ -44,7 +53,7 @@
     -webkit-flex-direction: row;
     -ms-flex-direction: row;
     flex-direction: row;
-    margin-bottom: 25%;
+    margin-bottom: 29%;
 }
 
 .post {
@@ -68,6 +77,93 @@
     -ms-user-select: none;
     user-select: none;
     width: 100%;
+}
+
+/*.post .overlay {
+    bottom: 0;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    flex-direction: column;
+    -webkit-box-pack: center;
+    justify-content: center;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin-top: 50%;
+    margin-left: 10%;
+    z-index: 999;
+}
+
+.post .overlay ul {
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    height: 100%;
+    -webkit-box-pack: center;
+    justify-content: center;
+    width: 100%;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+
+.post .overlay ul li {
+    display: inline-flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    flex-direction: row-reverse;
+    margin-right: 30px;
+}
+
+.post .overlay ul li div {
+    color: rgb(232, 230, 227) !important;
+    display: block;
+    font-weight: 600;
+    margin: 0;
+    font-size: 16px;
+    line-height: 24px;
+}*/
+
+.post .overlay {
+    display: none;
+}
+
+.post .overlay li {
+    font-size: 16px;
+    font-weight: 600;
+    display: inline-flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    flex-direction: row-reverse;
+    margin-right: 30px;
+}
+
+.post:hover .overlay,
+.post:focus .overlay {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    margin-top: 50%;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    color: rgb(232, 230, 227) !important;
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.post:hover .overlay-back,
+.post:focus .overlay-back {
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
 }
 
 .single-post {

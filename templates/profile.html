@@ -1,24 +1,37 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="posts-container">
-    <div class="flex posts" id="posts">
+    <div class="posts" id="posts">
         {% for row in posts_for_render(posts.edges) %}
-        <div class="flex row">
+        <div class="row">
             {% for post in row %}
             {% if post.is_fill is defined %}
-            <div class="flex post"></div>
+            <div class="post"></div>
             {% else %}
-            <div class="flex post" id="{{ post.node.shortcode }}">
+            <div class="post" id="{{ post.node.shortcode }}">
                 <a
                     href="{{ 'http://localhost:5000/p/' + post.node.shortcode }}"
                 >
+                    <div class="overlay-back">
+                        <span></span>
+                    </div>
                     <div class="overlay">
-                        <div class="tile">
-                            {{ post.node.edge_media_preview_like.count }}
-                        </div>
-                        <div class="tile">
-                            {{ post.node.edge_media_to_comment.count }}
-                        </div>
+                        <ul>
+                            <li>
+                                <div>
+                                    <span>
+                                        {{ post.node.edge_media_preview_like.count }}
+                                    </span>
+                                </div>
+                            </li>
+                            <li>
+                                <div>
+                                    <span>
+                                        {{ post.node.edge_media_to_comment.count }}
+                                    </span>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                     <div class="image">
                         <img
@@ -32,19 +45,19 @@
         </div>
         {% endfor %}
     </div>
-    {% if posts.page_info.has_next_page %}
-    <div class="pagination">
-        <div class="load">
-            <a
-                href="#{{ posts.edges[-1].node.shortcode }}"
-                username="{{ username }}"
-                end_cursor="{{ posts.page_info.end_cursor }}"
-                onclick="load_more_posts(this)"
-            >
-                Load More
-            </a>
-        </div>
-    </div>
-    {% endif %}
 </div>
+{% if posts.page_info.has_next_page %}
+<div class="pagination">
+    <div class="load">
+        <a
+            href="#{{ posts.edges[-1].node.shortcode }}"
+            username="{{ username }}"
+            end_cursor="{{ posts.page_info.end_cursor }}"
+            onclick="load_more_posts(this)"
+        >
+            Load More
+        </a>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
