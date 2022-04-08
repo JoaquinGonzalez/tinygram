@@ -25,9 +25,9 @@ function render_posts(posts)
                 const tileTwoDiv = document.createElement('div');
                 
                 overlayDiv.classList.add('overlay');
-                tileOneDiv.innerText = post.node.edge_media_preview_like;
+                tileOneDiv.innerText = post.node.edge_media_preview_like.count;
                 tileOneDiv.classList.add('tile');
-                tileTwoDiv.innerText = post.node.edge_media_to_comment;
+                tileTwoDiv.innerText = post.node.edge_media_to_comment.count;
                 tileTwoDiv.classList.add('tile');
 
                 overlayDiv.append(tileOneDiv);
