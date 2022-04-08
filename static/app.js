@@ -21,17 +21,25 @@ function render_posts(posts)
                 aEle.href = `http://localhost:5000/p/${post.node.shortcode}`;
 
                 const overlayDiv = document.createElement('div');
-                const tileOneDiv = document.createElement('div');
-                const tileTwoDiv = document.createElement('div');
+                const overlayUl = document.createElement('ul');
+                const overlayLiOne = document.createElement('li');
+                const overlayLiDivOne = document.createElement('div');
+                const overlayLiSpanOne = document.createElement('span');
+                const overlayLiTwo = document.createElement('li');
+                const overlayLiDivTwo = document.createElement('div');
+                const overlayLiSpanTwo = document.createElement('span');
                 
                 overlayDiv.classList.add('overlay');
-                tileOneDiv.innerText = post.node.edge_media_preview_like.count;
-                tileOneDiv.classList.add('tile');
-                tileTwoDiv.innerText = post.node.edge_media_to_comment.count;
-                tileTwoDiv.classList.add('tile');
+                overlayLiSpanOne.innerText = post.node.edge_media_preview_like.count;
+                overlayLiSpanTwo.innerText = post.node.edge_media_to_comment.count;
 
-                overlayDiv.append(tileOneDiv);
-                overlayDiv.append(tileTwoDiv);
+                overlayLiDivOne.append(overlayLiSpanOne);
+                overlayLiDivTwo.append(overlayLiSpanTwo);
+                overlayLiOne.append(overlayLiDivOne);
+                overlayLiTwo.append(overlayLiDivTwo);
+                overlayUl.append(overlayLiOne);
+                overlayUl.append(overlayLiTwo);
+                overlayDiv.append(overlayUl);
 
                 const imageDiv = document.createElement('div');
                 const imgEle = document.createElement('img');
