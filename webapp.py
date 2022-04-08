@@ -65,6 +65,7 @@ def utility_processor():
 def view_post(code):
     ig.load_post(code)
     return render_template('post.html', post=ig.get_post())
+    # return ig.get_post()
 
 @app.route("/<string:username>")
 @login_required

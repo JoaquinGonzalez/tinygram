@@ -3,10 +3,12 @@
 <div class="single-post">
     <div class="image">
         {% if post.carousel_media_count %}
+        {% for media in post.carousel_media %}
         <img
             src="http://localhost:5000/image?url=
-            {{ b64e(post.carousel_media[0].image_versions2.candidates[0].url) }}"
+            {{ b64e(media.image_versions2.candidates[0].url) }}"
         >
+        {% endfor %}
         {% else %}
         <img
             src="http://localhost:5000/image?url=

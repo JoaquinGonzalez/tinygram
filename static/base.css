@@ -168,6 +168,11 @@ main, div, section, article {
 
 .single-post {
     margin: 0 auto 30px;
+    height: 100%;
+}
+
+.single-post .image {
+    height: 100%;
 }
 
 .single-post .image img {
@@ -178,8 +183,8 @@ main, div, section, article {
     left: 0;
     margin: auto;
     overflow: auto;
-    position: fixed;
     right: 0;
+    display: inline-table;
     top: 0;
     -o-object-fit: contain;
     object-fit: contain;
